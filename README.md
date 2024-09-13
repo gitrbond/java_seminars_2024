@@ -4,5 +4,6 @@
 
 ## Getting started
 
-- [ ] скачать [JDK17](https://adoptium.net/temurin/releases/)
+- [ ] скачать [JDK 17](https://adoptium.net/temurin/releases/)
+- [ ] скачать [Gradle 8](https://gradle.org/releases/)
 - [ ] установить [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/other.html)
