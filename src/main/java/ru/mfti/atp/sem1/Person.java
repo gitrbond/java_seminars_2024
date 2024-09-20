@@ -1,35 +1,30 @@
 package ru.mfti.atp.sem1;
 
-public class Person extends Object {
-    private String name;
+import lombok.*;
 
-    int height;
+import java.util.Objects;
+
+@Setter
+@Getter
+@AllArgsConstructor
+public class Person {
+    private String name;
 
     private int age;
 
-    // Alt+insert to generate
-    public Person(String name, int age) {
-        this.name = name;
-        this.age = age;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return age == person.age && name.equalsIgnoreCase(person.name);
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public int hashCode() {
+        return Objects.hash(name.toLowerCase(), age);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    // Ctrl+/ = comment
     @Override
     public String toString() {
         return "Person{" +
