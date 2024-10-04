@@ -2,15 +2,19 @@ package ru.mfti.atp.sem1;
 
 import lombok.*;
 
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Consumer;
 
 @Setter
 @Getter
 @AllArgsConstructor
-public class Person {
+@RequiredArgsConstructor
+public class Person implements Comparable<Person>, Iterable<Pet> {
     private String name;
 
     private int age;
+
+    private final List<Pet> pets = List.of();
 
     @Override
     public boolean equals(Object o) {
@@ -31,5 +35,15 @@ public class Person {
                 "name='" + name + '\'' +
                 ", age=" + age +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Person o) {
+        return Comparator.comparingInt(Person::getAge).compare(this, o);
+    }
+
+    @Override
+    public Iterator<Pet> iterator() {
+        return pets.iterator();
     }
 }

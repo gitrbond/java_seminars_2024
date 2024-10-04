@@ -1,4 +1,4 @@
-package ru.mfti.atp.sem4;
+package ru.mfti.atp.sem5;
 
 import ru.mfti.atp.sem1.Person;
 
