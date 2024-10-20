@@ -1,20 +1,29 @@
 package ru.mfti.atp.sem1;
 
 import lombok.*;
+import ru.mfti.atp.sem6.NotNull;
+import ru.mfti.atp.sem7.Bounds;
 
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 @Setter
 @Getter
 @AllArgsConstructor
+@ToString
 @RequiredArgsConstructor
 public class Person implements Comparable<Person>, Iterable<Pet> {
+    @NotNull
     private String name;
 
+    @Bounds(min=0, max=120)
     private int age;
 
     private final List<Pet> pets = List.of();
+
+    public final String somePublicField = "whatever";
 
     @Override
     public boolean equals(Object o) {
@@ -27,14 +36,6 @@ public class Person implements Comparable<Person>, Iterable<Pet> {
     @Override
     public int hashCode() {
         return Objects.hash(name.toLowerCase(), age);
-    }
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                '}';
     }
 
     @Override
