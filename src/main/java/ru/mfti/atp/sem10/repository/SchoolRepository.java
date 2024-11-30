@@ -10,9 +10,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
-@Repository
 public class SchoolRepository {
     DataSource dataSource;
 
@@ -28,20 +30,37 @@ public class SchoolRepository {
         }
     }
 
-    public School getById(int id) {
+    public Optional<School> getByName(String name) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(
-                    "select * from school where id = ?;");
-            ps.setInt(1, id);
+                    "select * from school where name = ?;");
+            ps.setString(1, name);
 
             ResultSet result = ps.executeQuery();
             if (!result.next()) {
-                throw new IllegalArgumentException("school not found");
+                return Optional.empty();
             }
 
-            return new School(
+            return Optional.of(new School(
                     result.getInt("id"),
-                    result.getString("name"));
+                    result.getString("name")));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<School> getAll() {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select * from school");
+            ResultSet result = ps.executeQuery();
+
+            List<School> schools = new ArrayList<>();
+            while (result.next()) {
+                School school = new School(result.getInt("id"),
+                        result.getString("name"));
+                schools.add(school);
+            }
+            return schools;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

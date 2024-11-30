@@ -1,5 +1,6 @@
 package ru.mfti.atp.sem10.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mfti.atp.sem10.model.Pupil;
@@ -11,27 +12,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
 public class PupilService {
-    @Autowired
     PupilRepository pupilRepository;
-
-    @Autowired
     SchoolRepository schoolRepository;
-    Map<Integer, Pupil> pupils;
-    int pupilId;
 
-    public PupilService(PupilRepository pupilRepository) {
+    // pupil id to pupil
+    Map<Integer, Pupil> pupils;
+    int pupilId = 0;
+
+    public PupilService(PupilRepository pupilRepository, SchoolRepository schoolRepository) {
         this.pupilRepository = pupilRepository;
+        this.schoolRepository = schoolRepository;
         pupils = new HashMap<>();
-        pupilRepository.getAll().forEach(p -> pupils.put(p.getId(), p));
+        // read pupils from db on start
+        pupilRepository.getAll().forEach(p -> {
+            pupils.put(p.getId(), p);
+            pupilId = Math.max(pupilId, p.getId());
+        });
     }
 
     public int create(String pupilName, String schoolName) {
 //        School school = schoo
 //        if ()
-            schoolRepository.save(new School(1, ""));
-        Pupil pupil = new Pupil(pupilId++, pupilName, new School(1, ""));
+        schoolRepository.save(new School(1, ""));
+        Pupil pupil = new Pupil(++pupilId, pupilName, new School(1, ""));
         pupilRepository.save(pupil);
         return pupilId;
     }

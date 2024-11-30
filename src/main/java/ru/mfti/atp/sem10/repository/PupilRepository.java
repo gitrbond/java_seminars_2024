@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-@Repository
-
 public class PupilRepository {
     DataSource dataSource;
 
