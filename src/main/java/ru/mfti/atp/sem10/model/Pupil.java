@@ -6,5 +6,5 @@ import lombok.Value;
 public class Pupil {
     int id;
     String name;
-    School school;
+    ru.mfti.atp.sem10.model.School school;
 }
