@@ -1,9 +1,9 @@
 package ru.mfti.atp.sem10.repository;
 
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.mfti.atp.sem10.model.Pupil;
-import ru.mfti.atp.sem10.model.School;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -14,11 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-@Repository
-
+@Component
 public class PupilRepository {
+    @Autowired
     DataSource dataSource;
 
+    @Autowired
     SchoolRepository schoolRepository;
 
     public void save(Pupil pupil) {

@@ -1,7 +1,7 @@
 package ru.mfti.atp.sem10.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.mfti.atp.sem10.model.Pupil;
 import ru.mfti.atp.sem10.model.School;
 import ru.mfti.atp.sem10.repository.PupilRepository;
@@ -10,33 +10,45 @@ import ru.mfti.atp.sem10.repository.SchoolRepository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
-@Service
+@Component
 public class PupilService {
-    @Autowired
+    SchoolService schoolService;
+
     PupilRepository pupilRepository;
 
-    @Autowired
     SchoolRepository schoolRepository;
-    Map<Integer, Pupil> pupils;
-    int pupilId;
 
-    public PupilService(PupilRepository pupilRepository) {
+    // id to pupil
+    Map<Integer, Pupil> pupils;
+    AtomicInteger pupilId;
+
+    @Autowired
+    public PupilService(SchoolService schoolService, PupilRepository pupilRepository, SchoolRepository schoolRepository) {
+        this.schoolService = schoolService;
         this.pupilRepository = pupilRepository;
+        this.schoolRepository = schoolRepository;
         pupils = new HashMap<>();
-        pupilRepository.getAll().forEach(p -> pupils.put(p.getId(), p));
+        pupilId = new AtomicInteger(0);
+        pupilRepository.getAll().forEach(p -> {
+            pupils.put(p.getId(), p);
+            pupilId.accumulateAndGet(p.getId(), Math::max);
+        });
     }
 
     public int create(String pupilName, String schoolName) {
-//        School school = schoo
-//        if ()
-            schoolRepository.save(new School(1, ""));
-        Pupil pupil = new Pupil(pupilId++, pupilName, new School(1, ""));
+        Optional<School> school = schoolRepository.getAll().stream().filter(s -> s.getName().equals(schoolName)).findAny();
+        if (school.isEmpty()) {
+            school = Optional.of(schoolService.create(schoolName));
+        }
+        Pupil pupil = new Pupil(pupilId.incrementAndGet(), pupilName, school.get());
         pupilRepository.save(pupil);
-        return pupilId;
+        return pupilId.get();
     }
 
-    public List<Pupil> pupils() {
+    public List<Pupil> all() {
         return pupilRepository.getAll();
     }
 }
